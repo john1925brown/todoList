@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { ToDoList } from './components/ToDoList';
 import { v1 } from 'uuid';
-import { title } from 'process';
 
 export type FilterValuesType = 'all' | 'active' | 'completed';
 
@@ -11,6 +10,7 @@ function App() {
     { id: v1(), title: 'js', isDone: true },
     { id: v1(), title: 'react', isDone: false },
     { id: v1(), title: 'redux', isDone: false },
+    { id: v1(), title: 'GraphQL', isDone: false },
   ];
 
   let [tasks, setTasks] = useState(initTasks);
@@ -19,6 +19,10 @@ function App() {
   const removeTask = (id: string) => {
     let filteredTasks = tasks.filter((t) => id !== t.id);
     setTasks(filteredTasks);
+  };
+
+  const deleteAllTasks = () => {
+    setTasks([]);
   };
 
   const addTask = (value: string) => {
@@ -30,7 +34,12 @@ function App() {
 
     setTasks([newTask, ...tasks]);
   };
+
   let tasksForToDo = tasks;
+
+  const showThreeTask = () => {
+    setTasks(tasks.splice(0, 3)); // is correct?
+  };
 
   const changeFilter = (value: FilterValuesType) => {
     setActiveTab(value);
@@ -52,6 +61,8 @@ function App() {
         removeTask={removeTask}
         changeFilter={changeFilter}
         addTask={addTask}
+        deleteAllTasks={deleteAllTasks}
+        showThreeTask={showThreeTask}
       />
     </div>
   );

@@ -13,6 +13,8 @@ type PropsType = {
   removeTask: (id: string) => void;
   changeFilter: (value: FilterValuesType) => void;
   addTask: (value: string) => void;
+  deleteAllTasks: () => void;
+  showThreeTask: any;
 };
 
 export const ToDoList = (props: PropsType) => {
@@ -73,11 +75,13 @@ export const ToDoList = (props: PropsType) => {
           );
         })}
       </ul>
+      <button onClick={props.deleteAllTasks}>delete all</button>
 
       <div>
         <button onClick={onAllClickHandler}>all</button>
         <button onClick={onActiveClickHandler}>active</button>
         <button onClick={onCompletedClickHandler}>completed</button>
+        <button onClick={props.showThreeTask}>show 3 tasks</button>
       </div>
     </>
   );

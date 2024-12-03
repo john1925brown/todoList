@@ -1,5 +1,5 @@
 import { ChangeEvent, useState } from 'react';
-import { FilterValuesType } from '../App';
+import { v1 } from 'uuid';
 
 type TaskType = {
   id: string;
@@ -7,17 +7,60 @@ type TaskType = {
   isDone: boolean;
 };
 
+type FilterValuesType = 'all' | 'active' | 'completed' | 'firstThree';
+
 type PropsType = {
   title: string;
-  tasks: Array<TaskType>;
-  removeTask: (id: string) => void;
-  changeFilter: (value: FilterValuesType) => void;
-  addTask: (value: string) => void;
-  deleteAllTasks: () => void;
-  showThreeTask: any;
 };
 
 export const ToDoList = (props: PropsType) => {
+  const initTasks = [
+    { id: v1(), title: 'html', isDone: true },
+    { id: v1(), title: 'js', isDone: true },
+    { id: v1(), title: 'react', isDone: false },
+    { id: v1(), title: 'redux', isDone: false },
+    { id: v1(), title: 'GraphQL', isDone: false },
+  ];
+
+  let [tasks, setTasks] = useState(initTasks);
+  let [activeTab, setActiveTab] = useState<FilterValuesType>('all');
+
+  const removeTask = (id: string) => {
+    setTasks(tasks.filter((t) => id !== t.id));
+  };
+
+  const deleteAllTasks = () => {
+    setTasks([]);
+  };
+
+  const addTask = (value: string) => {
+    let newTask: TaskType = {
+      id: v1(),
+      title: value,
+      isDone: false,
+    };
+
+    setTasks([newTask, ...tasks]);
+  };
+
+  const changeFilter = (value: FilterValuesType) => {
+    setActiveTab(value);
+  };
+
+  let tasksForToDo = tasks;
+
+  if (activeTab === 'completed') {
+    tasksForToDo = tasks.filter((t) => t.isDone === true);
+  }
+
+  if (activeTab === 'active') {
+    tasksForToDo = tasks.filter((t) => t.isDone === false);
+  }
+
+  if (activeTab === 'firstThree') {
+    tasksForToDo = tasks.filter((t, index) => index < 3);
+  }
+
   const [newTaskTitle, setNewTaskTitle] = useState('');
 
   const onNewTaskChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -26,26 +69,30 @@ export const ToDoList = (props: PropsType) => {
 
   const onNewTaskPressHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && newTaskTitle) {
-      props.addTask(newTaskTitle);
+      addTask(newTaskTitle);
       setNewTaskTitle('');
     }
   };
 
   const addNewTask = () => {
-    props.addTask(newTaskTitle);
+    addTask(newTaskTitle);
     setNewTaskTitle('');
   };
 
   const onAllClickHandler = () => {
-    return props.changeFilter('all');
+    return changeFilter('all');
   };
 
   const onActiveClickHandler = () => {
-    return props.changeFilter('active');
+    return changeFilter('active');
   };
 
   const onCompletedClickHandler = () => {
-    return props.changeFilter('completed');
+    return changeFilter('completed');
+  };
+
+  const showThreeTaskHandler = () => {
+    return changeFilter('firstThree');
   };
 
   return (
@@ -59,14 +106,14 @@ export const ToDoList = (props: PropsType) => {
       />
       <button onClick={addNewTask}>add</button>
       <ul>
-        {props.tasks.map((t) => {
+        {tasksForToDo.map((t) => {
           return (
             <li key={t.id}>
               {t.title}
               <input type="checkbox" checked={t.isDone} />
               <button
                 onClick={() => {
-                  props.removeTask(t.id);
+                  removeTask(t.id);
                 }}
               >
                 delete
@@ -75,13 +122,13 @@ export const ToDoList = (props: PropsType) => {
           );
         })}
       </ul>
-      <button onClick={props.deleteAllTasks}>delete all</button>
+      <button onClick={deleteAllTasks}>delete all</button>
 
       <div>
         <button onClick={onAllClickHandler}>all</button>
         <button onClick={onActiveClickHandler}>active</button>
         <button onClick={onCompletedClickHandler}>completed</button>
-        <button onClick={props.showThreeTask}>show 3 tasks</button>
+        <button onClick={showThreeTaskHandler}>show 3 tasks</button>
       </div>
     </>
   );

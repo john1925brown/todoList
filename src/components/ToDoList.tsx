@@ -74,6 +74,14 @@ export const ToDoList = (props: PropsType) => {
     }
   };
 
+  const changeTaskStatus = (taskId: string) => {
+    let currentTask = tasks.find((task) => task.id === taskId); // find current task,
+    if (currentTask) {
+      currentTask.isDone = !currentTask?.isDone; // change current tusk isDone
+    }
+    setTasks([...tasks]); // update state
+  };
+
   const addNewTask = () => {
     addTask(newTaskTitle);
     setNewTaskTitle('');
@@ -110,7 +118,13 @@ export const ToDoList = (props: PropsType) => {
           return (
             <li key={t.id}>
               {t.title}
-              <input type="checkbox" checked={t.isDone} />
+              <input
+                type="checkbox"
+                checked={t.isDone}
+                onChange={() => {
+                  changeTaskStatus(t.id);
+                }}
+              />
               <button
                 onClick={() => {
                   removeTask(t.id);

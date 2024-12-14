@@ -1,14 +1,13 @@
 import { ChangeEvent, useState } from 'react';
 import { v1 } from 'uuid';
 import './toDoList.css';
+import { FilterValuesType } from '../App';
 
 type TaskType = {
   id: string;
   title: string;
   isDone: boolean;
 };
-
-type FilterValuesType = 'all' | 'active' | 'completed' | 'firstThree';
 
 type PropsType = {
   title: string;

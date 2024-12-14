@@ -11,6 +11,9 @@ type TaskType = {
 
 type PropsType = {
   title: string;
+  filter: FilterValuesType;
+  todoListId: string;
+  removeTodoList: (todoListId: string) => void;
 };
 
 export const ToDoList = (props: PropsType) => {
@@ -23,7 +26,9 @@ export const ToDoList = (props: PropsType) => {
   ];
 
   let [tasks, setTasks] = useState(initTasks);
-  let [activeTab, setActiveTab] = useState<FilterValuesType>('all');
+  let [activeFilter, setActiveFilter] = useState<FilterValuesType>(
+    props.filter
+  );
   let [isInputEmpty, setIsInputEmpty] = useState(false);
 
   const removeTask = (id: string) => {
@@ -45,21 +50,21 @@ export const ToDoList = (props: PropsType) => {
   };
 
   const changeFilter = (value: FilterValuesType) => {
-    setActiveTab(value);
+    setActiveFilter(value);
   };
 
-  let tasksForToDo = tasks;
+  let tasksForTodo = tasks;
 
-  if (activeTab === 'completed') {
-    tasksForToDo = tasks.filter((t) => t.isDone === true);
+  if (activeFilter === 'completed') {
+    tasksForTodo = tasks.filter((t) => t.isDone === true);
   }
 
-  if (activeTab === 'active') {
-    tasksForToDo = tasks.filter((t) => t.isDone === false);
+  if (activeFilter === 'active') {
+    tasksForTodo = tasks.filter((t) => t.isDone === false);
   }
 
-  if (activeTab === 'firstThree') {
-    tasksForToDo = tasks.filter((t, index) => index < 3);
+  if (activeFilter === 'firstThree') {
+    tasksForTodo = tasks.filter((t, index) => index < 3);
   }
 
   const [newTaskTitle, setNewTaskTitle] = useState('');
@@ -109,9 +114,15 @@ export const ToDoList = (props: PropsType) => {
     return changeFilter('firstThree');
   };
 
+  const removeTodoList = () => {
+    props.removeTodoList(props.todoListId);
+  };
+
   return (
     <>
       <h2>{props.title}</h2>
+      <button onClick={removeTodoList}>remove todoList </button>
+      <br />
       <input
         type="text"
         value={newTaskTitle}
@@ -122,7 +133,7 @@ export const ToDoList = (props: PropsType) => {
       <button onClick={addNewTask}>add</button>
       {isInputEmpty && <p className="error__message">Field is required</p>}
       <ul>
-        {tasksForToDo.map((t) => {
+        {tasksForTodo.map((t) => {
           return (
             <li key={t.id} className={t.isDone ? 'is-done' : ''}>
               {t.title}
@@ -148,25 +159,25 @@ export const ToDoList = (props: PropsType) => {
 
       <div>
         <button
-          className={activeTab === 'all' ? 'filter--active' : ''}
+          className={activeFilter === 'all' ? 'filter--active' : ''}
           onClick={onAllClickHandler}
         >
           all
         </button>
         <button
-          className={activeTab === 'active' ? 'filter--active' : ''}
+          className={activeFilter === 'active' ? 'filter--active' : ''}
           onClick={onActiveClickHandler}
         >
           active
         </button>
         <button
-          className={activeTab === 'completed' ? 'filter--active' : ''}
+          className={activeFilter === 'completed' ? 'filter--active' : ''}
           onClick={onCompletedClickHandler}
         >
           completed
         </button>
         <button
-          className={activeTab === 'firstThree' ? 'filter--active' : ''}
+          className={activeFilter === 'firstThree' ? 'filter--active' : ''}
           onClick={showThreeTaskHandler}
         >
           show 3 tasks

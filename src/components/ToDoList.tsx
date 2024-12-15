@@ -53,19 +53,18 @@ export const ToDoList = (props: PropsType) => {
     setActiveFilter(value);
   };
 
-  let tasksForTodo = tasks;
+  const filteredTasks=()=>{
+    let tasksForTodolist = tasks;
 
-  if (activeFilter === 'completed') {
-    tasksForTodo = tasks.filter((t) => t.isDone === true);
-  }
+    if (activeFilter === "active") {
+    return   tasksForTodolist = tasks.filter(t => !t.isDone);
+    }
+    if (activeFilter === "completed") {
+      return  tasksForTodolist = tasks.filter(t => t.isDone);
+    }
+    return tasksForTodolist
+}
 
-  if (activeFilter === 'active') {
-    tasksForTodo = tasks.filter((t) => t.isDone === false);
-  }
-
-  if (activeFilter === 'firstThree') {
-    tasksForTodo = tasks.filter((t, index) => index < 3);
-  }
 
   const [newTaskTitle, setNewTaskTitle] = useState('');
 
@@ -133,7 +132,7 @@ export const ToDoList = (props: PropsType) => {
       <button onClick={addNewTask}>add</button>
       {isInputEmpty && <p className="error__message">Field is required</p>}
       <ul>
-        {tasksForTodo.map((t) => {
+        {filteredTasks().map((t) => {
           return (
             <li key={t.id} className={t.isDone ? 'is-done' : ''}>
               {t.title}

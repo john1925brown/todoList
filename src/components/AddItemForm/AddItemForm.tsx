@@ -1,17 +1,16 @@
 import { ChangeEvent, KeyboardEvent, useState } from 'react';
 
 type AddItemFormPropsType = {
-  addItem: (title: string, todoListId: string) => void;
-  todoListId: string;
+  addItem: (title: string) => void;
 };
 
-export const AddItemForm = ({ addItem, todoListId }: AddItemFormPropsType) => {
+export const AddItemForm = ({ addItem }: AddItemFormPropsType) => {
   let [isInputEmpty, setIsInputEmpty] = useState(false);
   const [newTaskTitle, setNewTaskTitle] = useState('');
 
   const onNewTaskPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && newTaskTitle.trim().length) {
-      addItem(newTaskTitle, todoListId);
+      addItem(newTaskTitle);
       setNewTaskTitle('');
     }
   };
@@ -26,7 +25,7 @@ export const AddItemForm = ({ addItem, todoListId }: AddItemFormPropsType) => {
       setIsInputEmpty(true);
       return;
     }
-    addItem(newTaskTitle, todoListId);
+    addItem(newTaskTitle);
     setNewTaskTitle('');
   };
 

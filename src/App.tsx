@@ -11,6 +11,10 @@ type TodoListsType = {
   filter: FilterValuesType;
 };
 
+type TasksStateType = {
+  [key: string]: Array<TaskType>;
+};
+
 function App() {
   const todoList1 = v1();
   const todoList2 = v1();
@@ -20,7 +24,7 @@ function App() {
     { id: todoList2, title: 'What buy', filter: 'active' },
   ]);
 
-  const initTasks = {
+  const initTasks: TasksStateType = {
     [todoList1]: [
       { id: v1(), title: 'html', isDone: true },
       { id: v1(), title: 'js', isDone: true },
@@ -35,7 +39,7 @@ function App() {
     ],
   };
 
-  let [tasksObj, setTasks] = useState(initTasks);
+  let [tasksObj, setTasks] = useState<TasksStateType>(initTasks);
 
   const removeTask = (id: string, todoListId: string) => {
     const filteredTasks = tasksObj[todoListId].filter((t) => id !== t.id);
@@ -89,6 +93,7 @@ function App() {
     setTodoLists([newTodoList, ...todoLists]);
     setTasks({ ...tasksObj, [newTodoList.id]: [] });
   };
+
   return (
     <div className="App">
       <AddItemForm addItem={addTodolist} />

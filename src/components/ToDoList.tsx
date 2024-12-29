@@ -2,6 +2,8 @@ import './toDoList.css';
 import { FilterValuesType } from '../App';
 import { AddItemForm } from './AddItemForm/AddItemForm';
 import { EditableSpan } from './EditableSpan/EditableSpan';
+import { Button, Checkbox } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export type TaskType = {
   id: string;
@@ -51,16 +53,21 @@ export const ToDoList = (props: PropsType) => {
     props.changeTodoListTitle(newTitle, props.todoListId);
   };
   return (
-    <>
+    <div>
       <h2>
-        {' '}
         <EditableSpan
           onChangeTitleHandler={changeTodoListTitle}
           title={props.title}
         />
       </h2>
 
-      <button onClick={removeTodoList}>remove todoList </button>
+      <Button
+        onClick={removeTodoList}
+        variant="outlined"
+        startIcon={<DeleteIcon />}
+      >
+        remove todoList
+      </Button>
 
       <AddItemForm addItem={addTask} />
 
@@ -77,51 +84,59 @@ export const ToDoList = (props: PropsType) => {
                 onChangeTitleHandler={onChangeTitleHandler}
               />
 
-              <input
-                type="checkbox"
+              <Checkbox
                 checked={t.isDone}
                 onChange={() => {
                   props.changeTaskStatus(t.id, props.todoListId);
                 }}
               />
-              <button
+
+              <Button
                 onClick={() => {
                   props.removeTask(t.id, props.todoListId);
                 }}
-              >
-                delete
-              </button>
+                variant="text"
+                startIcon={<DeleteIcon />}
+              />
             </li>
           );
         })}
       </ul>
 
       <div>
-        <button
+        <Button
+          color="inherit"
+          variant={props.filter === 'all' ? 'contained' : 'outlined'}
           className={props.filter === 'all' ? 'filter--active' : ''}
           onClick={onAllClickHandler}
         >
           all
-        </button>
-        <button
+        </Button>
+        <Button
+          color="primary"
+          variant={props.filter === 'active' ? 'contained' : 'outlined'}
           className={props.filter === 'active' ? 'filter--active' : ''}
           onClick={onActiveClickHandler}
         >
           active
-        </button>
-        <button
+        </Button>
+        <Button
+          color="secondary"
+          variant={props.filter === 'completed' ? 'contained' : 'outlined'}
           className={props.filter === 'completed' ? 'filter--active' : ''}
           onClick={onCompletedClickHandler}
         >
           completed
-        </button>
-        <button
+        </Button>
+        <Button
+          color="success"
+          variant={props.filter === 'firstThree' ? 'contained' : 'outlined'}
           className={props.filter === 'firstThree' ? 'filter--active' : ''}
           onClick={showThreeTaskHandler}
         >
           show 3 tasks
-        </button>
+        </Button>
       </div>
-    </>
+    </div>
   );
 };

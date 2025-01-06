@@ -17,7 +17,7 @@ import { Grid } from '@mui/system';
 
 export type FilterValuesType = 'all' | 'active' | 'completed' | 'firstThree';
 
-type TodoListsType = {
+export type TodoListsType = {
   id: string;
   title: string;
   filter: FilterValuesType;

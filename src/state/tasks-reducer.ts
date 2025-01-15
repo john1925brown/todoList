@@ -1,13 +1,17 @@
 import { v1 } from 'uuid';
-import { FilterValuesType, TasksStateType } from '../App';
-import { TaskType } from '../components/ToDoList';
-import { TaskAlt } from '@mui/icons-material';
+import { TasksStateType } from '../App';
+import {
+  AddTotodlistActionType,
+  RemoveTodoListActionType,
+} from './todolists-reducer';
 
 type ActionsType =
   | RemoveTaskActionType
   | AddTaskActionType
   | ChangeTaskStatusActionType
-  | ChangeTaskTitleActionType;
+  | ChangeTaskTitleActionType
+  | RemoveTodoListActionType
+  | AddTotodlistActionType;
 
 // action types
 
@@ -81,6 +85,7 @@ export const tasksReducer = (
   switch (action.type) {
     case 'REMOVE-TASK': {
       const stateCopy = { ...state };
+
       const filteredTasks = stateCopy[action.todolistId].filter(
         (task) => task.id !== action.taskId
       );
@@ -98,13 +103,13 @@ export const tasksReducer = (
     }
 
     case 'CHANGE-TASK-STATUS': {
-      const stateCopy = { ...state };
-      const currentTask = stateCopy[action.todolistId].find(
-        (task) => task.id === action.taskId
-      );
-      if (currentTask) {
-        currentTask.isDone = !currentTask.isDone;
-      }
+      const stateCopy = {
+        ...state,
+        [action.todolistId]: state[action.todolistId].map((task) =>
+          task.id === action.taskId ? { ...task, isDone: !task.isDone } : task
+        ),
+      };
+
       return stateCopy;
     }
 
@@ -117,6 +122,19 @@ export const tasksReducer = (
       if (currentTask) {
         currentTask.title = action.newTitle;
       }
+      return stateCopy;
+    }
+
+    case 'ADD-TODOLIST': {
+      const stateCopy = { ...state };
+
+      stateCopy[action.todolistId] = [];
+      return stateCopy;
+    }
+
+    case 'REMOVE-TODOLIST': {
+      const stateCopy = { ...state };
+      delete stateCopy[action.id];
       return stateCopy;
     }
     default:

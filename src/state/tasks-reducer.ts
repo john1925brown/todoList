@@ -3,6 +3,8 @@ import { TasksStateType } from '../App';
 import {
   AddTotodlistActionType,
   RemoveTodoListActionType,
+  todoList1,
+  todoList2,
 } from './todolists-reducer';
 
 type ActionsType =
@@ -77,9 +79,24 @@ export const changeTaskTitleAC = (
   };
 };
 
+const initialState: TasksStateType = {
+  [todoList1]: [
+    { id: v1(), title: 'html', isDone: true },
+    { id: v1(), title: 'js', isDone: true },
+    { id: v1(), title: 'react', isDone: false },
+    { id: v1(), title: 'redux', isDone: false },
+    { id: v1(), title: 'GraphQL', isDone: false },
+  ],
+  [todoList2]: [
+    { id: v1(), title: 'meat', isDone: true },
+    { id: v1(), title: 'beer', isDone: true },
+    { id: v1(), title: 'milk', isDone: false },
+  ],
+};
+
 //reducer
 export const tasksReducer = (
-  state: TasksStateType,
+  state: TasksStateType = initialState,
   action: ActionsType
 ): TasksStateType => {
   switch (action.type) {
@@ -138,6 +155,6 @@ export const tasksReducer = (
       return stateCopy;
     }
     default:
-      throw new Error('No such type found');
+      return state;
   }
 };

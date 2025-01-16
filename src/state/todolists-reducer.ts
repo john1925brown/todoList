@@ -63,15 +63,26 @@ export const changeTotodlistFilterAC = (
   };
 };
 
+export const todoList1 = v1();
+export const todoList2 = v1();
+
+const initialState: TodoListsType[] = [
+  { id: todoList1, title: 'What learn', filter: 'all' },
+  { id: todoList2, title: 'What buy', filter: 'active' },
+];
+
 export const todolistsReducer = (
-  state: TodoListsType[],
+  state: TodoListsType[] = initialState,
   action: ActionsType
 ): TodoListsType[] => {
   switch (action.type) {
     case 'REMOVE-TODOLIST':
       return state.filter((todolist) => todolist.id !== action.id);
     case 'ADD-TODOLIST':
-      return [...state, { id: action.todolistId, filter: 'all', title: action.title }];
+      return [
+        ...state,
+        { id: action.todolistId, filter: 'all', title: action.title },
+      ];
     case 'CHANGE-TODOLIST-TITLE':
       return state.map((item) =>
         item.id === action.id ? { ...item, title: action.title } : item
@@ -81,6 +92,6 @@ export const todolistsReducer = (
         item.id === action.id ? { ...item, filter: action.filter } : item
       );
     default:
-      throw new Error('No such type found');
+      return state;
   }
 };

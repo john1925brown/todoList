@@ -1,13 +1,19 @@
 import { v1 } from 'uuid';
-import { FilterValuesType, TasksStateType } from '../App';
-import { TaskType } from '../components/ToDoList';
-import { TaskAlt } from '@mui/icons-material';
+import { TasksStateType } from '../AppWithRedux';
+import {
+  AddTotodlistActionType,
+  RemoveTodoListActionType,
+  todoList1,
+  todoList2,
+} from './todolists-reducer';
 
 type ActionsType =
   | RemoveTaskActionType
   | AddTaskActionType
   | ChangeTaskStatusActionType
-  | ChangeTaskTitleActionType;
+  | ChangeTaskTitleActionType
+  | RemoveTodoListActionType
+  | AddTotodlistActionType;
 
 // action types
 
@@ -73,14 +79,30 @@ export const changeTaskTitleAC = (
   };
 };
 
+const initialState: TasksStateType = {
+  [todoList1]: [
+    { id: v1(), title: 'html', isDone: true },
+    { id: v1(), title: 'js', isDone: true },
+    { id: v1(), title: 'react', isDone: false },
+    { id: v1(), title: 'redux', isDone: false },
+    { id: v1(), title: 'GraphQL', isDone: false },
+  ],
+  [todoList2]: [
+    { id: v1(), title: 'meat', isDone: true },
+    { id: v1(), title: 'beer', isDone: true },
+    { id: v1(), title: 'milk', isDone: false },
+  ],
+};
+
 //reducer
 export const tasksReducer = (
-  state: TasksStateType,
+  state: TasksStateType = initialState,
   action: ActionsType
 ): TasksStateType => {
   switch (action.type) {
     case 'REMOVE-TASK': {
       const stateCopy = { ...state };
+
       const filteredTasks = stateCopy[action.todolistId].filter(
         (task) => task.id !== action.taskId
       );
@@ -98,28 +120,38 @@ export const tasksReducer = (
     }
 
     case 'CHANGE-TASK-STATUS': {
-      const stateCopy = { ...state };
-      const currentTask = stateCopy[action.todolistId].find(
-        (task) => task.id === action.taskId
-      );
-      if (currentTask) {
-        currentTask.isDone = !currentTask.isDone;
-      }
+      const stateCopy = {
+        ...state,
+        [action.todolistId]: state[action.todolistId].map((task) =>
+          task.id === action.taskId ? { ...task, isDone: !task.isDone } : task
+        ),
+      };
+
       return stateCopy;
     }
 
     case 'CHANGE-TASK-TITLE': {
       const stateCopy = { ...state };
-      const currentTask = stateCopy[action.todolistId].find(
-        (task) => task.id === action.taskId
-      );
 
-      if (currentTask) {
-        currentTask.title = action.newTitle;
-      }
+      stateCopy[action.todolistId] = stateCopy[action.todolistId].map((task) =>
+        task.id === action.taskId ? { ...task, title: action.newTitle } : task
+      );
+      return stateCopy;
+    }
+
+    case 'ADD-TODOLIST': {
+      const stateCopy = { ...state };
+
+      stateCopy[action.todolistId] = [];
+      return stateCopy;
+    }
+
+    case 'REMOVE-TODOLIST': {
+      const stateCopy = { ...state };
+      delete stateCopy[action.id];
       return stateCopy;
     }
     default:
-      throw new Error('No such type found');
+      return state;
   }
 };

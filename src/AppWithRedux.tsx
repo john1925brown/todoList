@@ -22,6 +22,7 @@ import {} from './state/tasks-reducer';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { AppRootStateType } from './state/store';
+import { useCallback } from 'react';
 
 export type FilterValuesType = 'all' | 'active' | 'completed' | 'firstThree';
 
@@ -42,6 +43,8 @@ export function AppWithRedux() {
     (state) => state.todoLists
   );
 
+  
+
   const changeFilter = (value: FilterValuesType, todoListId: string) => {
     dispatch(changeTotodlistFilterAC(todoListId, value));
   };
@@ -56,10 +59,10 @@ export function AppWithRedux() {
     dispatch(action);
   };
 
-  const addTodolist = (title: string) => {
+  const addTodolist = useCallback((title: string) => {
     const action = addTodolistAC(title);
     dispatch(action);
-  };
+  }, []);
 
   return (
     <div className="App">

@@ -13,6 +13,7 @@ import {
   changeTaskTitleAC,
   removeTaskAC,
 } from '../state/tasks-reducer';
+import { memo, useCallback } from 'react';
 
 export type TaskType = {
   id: string;
@@ -28,31 +29,41 @@ type ToDoListPropsType = {
   changeFilter: (value: FilterValuesType, todolistId: string) => void;
   changeTodoListTitle: (newTitle: string, todolistId: string) => void;
 };
-export const ToDoList = (props: ToDoListPropsType): JSX.Element => {
+export const ToDoList = memo((props: ToDoListPropsType): JSX.Element => {
   const dispatch = useDispatch();
+  console.log('todo item');
 
   const tasks = useSelector<AppRootStateType, TaskType[]>(
     (state) => state.tasks[props.todolistId]
   );
 
-  const onAllClickHandler = () => props.changeFilter('all', props.todolistId);
+  const onAllClickHandler = useCallback(() => {
+    props.changeFilter('all', props.todolistId);
+  }, []);
 
-  const onActiveClickHandler = () =>
+  const onActiveClickHandler = useCallback(() => {
     props.changeFilter('active', props.todolistId);
+  }, []);
 
-  const onCompletedClickHandler = () =>
+  const onCompletedClickHandler = useCallback(() => {
     props.changeFilter('completed', props.todolistId);
+  }, []);
 
-  const showThreeTaskHandler = () =>
+  const showThreeTaskHandler = useCallback(() => {
     props.changeFilter('firstThree', props.todolistId);
+  }, []);
 
-  const removeTodoList = () => {
+  const removeTodoList = useCallback(() => {
     props.removeTodoList(props.todolistId);
-  };
+  }, []);
 
-  const changeTodoListTitle = (newTitle: string) => {
+  const changeTodoListTitle = useCallback((newTitle: string) => {
     props.changeTodoListTitle(newTitle, props.todolistId);
-  };
+  }, []);
+
+  const addTask = useCallback((title: string) => {
+    dispatch(addTaskAC(props.todolistId, title));
+  }, []);
 
   let tasksForTodolist = tasks;
 
@@ -85,11 +96,7 @@ export const ToDoList = (props: ToDoListPropsType): JSX.Element => {
         remove todoList
       </Button>
 
-      <AddItemForm
-        addItem={(title: string) => {
-          dispatch(addTaskAC(props.todolistId, title));
-        }}
-      />
+      <AddItemForm addItem={addTask} />
 
       <ul>
         {tasksForTodolist.map((t) => {
@@ -160,4 +167,4 @@ export const ToDoList = (props: ToDoListPropsType): JSX.Element => {
       </div>
     </div>
   );
-};
+});

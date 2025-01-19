@@ -79,20 +79,7 @@ export const changeTaskTitleAC = (
   };
 };
 
-const initialState: TasksStateType = {
-  [todoList1]: [
-    { id: v1(), title: 'html', isDone: true },
-    { id: v1(), title: 'js', isDone: true },
-    { id: v1(), title: 'react', isDone: false },
-    { id: v1(), title: 'redux', isDone: false },
-    { id: v1(), title: 'GraphQL', isDone: false },
-  ],
-  [todoList2]: [
-    { id: v1(), title: 'meat', isDone: true },
-    { id: v1(), title: 'beer', isDone: true },
-    { id: v1(), title: 'milk', isDone: false },
-  ],
-};
+const initialState: TasksStateType = {};
 
 //reducer
 export const tasksReducer = (

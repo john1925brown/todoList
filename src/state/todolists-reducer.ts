@@ -67,8 +67,7 @@ export const todoList1 = v1();
 export const todoList2 = v1();
 
 const initialState: TodoListsType[] = [
-  { id: todoList1, title: 'What learn', filter: 'all' },
-  { id: todoList2, title: 'What buy', filter: 'active' },
+
 ];
 
 export const todolistsReducer = (

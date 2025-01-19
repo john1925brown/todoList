@@ -1,15 +1,14 @@
-import {  IconButton, TextField } from '@mui/material';
-import { ChangeEvent, KeyboardEvent, useState } from 'react';
+import { IconButton, TextField } from '@mui/material';
+import React, { ChangeEvent, KeyboardEvent, memo, useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 
 type AddItemFormPropsType = {
   addItem: (title: string) => void;
 };
 
-export const AddItemForm = ({ addItem }: AddItemFormPropsType) => {
+export const AddItemForm = React.memo(({ addItem }: AddItemFormPropsType) => {
   let [isInputEmpty, setIsInputEmpty] = useState(false);
   const [newTaskTitle, setNewTaskTitle] = useState('');
-
   const onNewTaskPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && newTaskTitle.trim().length) {
       addItem(newTaskTitle);
@@ -18,7 +17,9 @@ export const AddItemForm = ({ addItem }: AddItemFormPropsType) => {
   };
 
   const onNewTaskChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setIsInputEmpty(false);
+    if (isInputEmpty) {
+      setIsInputEmpty(false);
+    }
     setNewTaskTitle(e.currentTarget.value);
   };
 
@@ -48,4 +49,4 @@ export const AddItemForm = ({ addItem }: AddItemFormPropsType) => {
       {isInputEmpty && <p className="error__message">Field is required</p>}
     </div>
   );
-};
+});

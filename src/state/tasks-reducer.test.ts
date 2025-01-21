@@ -1,5 +1,5 @@
 import { TasksStateType } from '../AppWithRedux';
-import { TaskType } from '../components/ToDoList';
+import { TaskType } from '../components/todoList/ToDoList';
 import {
   addTaskAC,
   changeTaskStatusAC,

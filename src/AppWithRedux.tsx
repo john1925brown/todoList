@@ -5,13 +5,13 @@ import './App.css';
 import {
   AppBar,
   Container,
-  createTheme,
   IconButton,
-  Button,
   Paper,
-  ThemeProvider,
   Toolbar,
+  CssBaseline,
+  Switch,
 } from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Grid } from '@mui/system';
 import { containerSx } from './components/todoList/Todolist.styles';
@@ -26,8 +26,8 @@ import {} from './state/tasks-reducer';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { AppRootStateType } from './state/store';
-import { useCallback } from 'react';
-import { NavButton } from './components/NavButtoun';
+import { useCallback, useState } from 'react';
+import { NavButton } from './components/NavButton';
 
 export type FilterValuesType = 'all' | 'active' | 'completed' | 'firstThree';
 
@@ -77,12 +77,23 @@ export function AppWithRedux() {
     dispatch(action);
   }, []);
 
+  // THEME
+
+  type ThemeMode = 'dark' | 'light';
+
+  const [themeMode, setThemeMode] = useState<ThemeMode>('light');
+
+  const changeMode = () => {
+    setThemeMode(themeMode === 'light' ? 'dark' : 'light');
+  };
+
   const theme = createTheme({
     palette: {
+      mode: themeMode,
       primary: {
         main: '#087EA4',
         light: '#5CB3CC',
-        dark: '#005580',
+        dark: '#0a354b',
         contrastText: '#ffffff',
       },
     },
@@ -91,6 +102,7 @@ export function AppWithRedux() {
   return (
     <div className="App">
       <ThemeProvider theme={theme}>
+        <CssBaseline />
         <AppBar position="static" sx={{ mb: '30px' }}>
           <Toolbar>
             <Container maxWidth={'lg'} sx={containerSx}>
@@ -98,18 +110,12 @@ export function AppWithRedux() {
                 <MenuIcon />
               </IconButton>
               <div>
-                <NavButton color="inherit" theme={theme}>
-                  Sign in
-                </NavButton>
-                <NavButton color="inherit" theme={theme}>
-                  Sign up
-                </NavButton>
+                <NavButton color="inherit">Sign in</NavButton>
+                <NavButton color="inherit">Sign up</NavButton>
                 <NavButton background={theme.palette.primary.dark}>
                   Faq
                 </NavButton>
-                {/* <NavButton color="inherit" theme={theme} background={'dodgerblue'}> */}
-                {/* FAQ */}
-                {/* </NavButton> */}
+                <Switch color={'default'} onChange={changeMode} />
               </div>
             </Container>
           </Toolbar>

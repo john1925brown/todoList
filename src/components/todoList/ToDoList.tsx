@@ -1,13 +1,13 @@
 import './toDoList.css';
-import { FilterValuesType } from '../AppWithRedux';
-import { AddItemForm } from './AddItemForm/AddItemForm';
-import { EditableSpan } from './EditableSpan/EditableSpan';
+import { FilterValuesType } from '../../AppWithRedux';
+import { AddItemForm } from '../AddItemForm/AddItemForm';
+import { EditableSpan } from '../EditableSpan/EditableSpan';
 import { Button } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useDispatch } from 'react-redux';
-import { addTaskAC } from '../state/tasks-reducer';
+import { addTaskAC } from '../../state/tasks-reducer';
 import { memo, useCallback } from 'react';
-import { Task } from './Task/Task';
+import { Task } from '../Task/Task';
 
 export type TaskType = {
   id: string;
@@ -94,7 +94,7 @@ export const ToDoList = memo((props: ToDoListPropsType): JSX.Element => {
 
       <AddItemForm addItem={addTask} />
 
-      <ul>
+      <div>
         {tasksForTodolist.map((t) => (
           <Task
             key={t.id}
@@ -104,7 +104,7 @@ export const ToDoList = memo((props: ToDoListPropsType): JSX.Element => {
             title={t.title}
           />
         ))}
-      </ul>
+      </div>
 
       <div>
         <Button
@@ -124,7 +124,7 @@ export const ToDoList = memo((props: ToDoListPropsType): JSX.Element => {
           active
         </Button>
         <Button
-          color="secondary"
+          color="error"
           variant={props.filter === 'completed' ? 'contained' : 'outlined'}
           className={props.filter === 'completed' ? 'filter--active' : ''}
           onClick={onCompletedClickHandler}
@@ -143,34 +143,3 @@ export const ToDoList = memo((props: ToDoListPropsType): JSX.Element => {
     </div>
   );
 });
-
-// {
-//   const onChangeTitleHandler = (newValue: string) => {
-//     dispatch(changeTaskTitleAC(props.todolistId, t.id, newValue));
-//   };
-
-//   const onChangeStatusHandler = () => {
-//     dispatch(changeTaskStatusAC(props.todolistId, t.id));
-//   };
-
-//   const onClickRemoveHandler = () => {
-//     dispatch(removeTaskAC(props.todolistId, t.id));
-//   };
-
-//   return (
-//     <li key={t.id} className={t.isDone ? 'is-done' : ''}>
-//       <EditableSpan
-//         title={t.title}
-//         onChangeTitleHandler={onChangeTitleHandler}
-//       />
-
-//       <Checkbox checked={t.isDone} onChange={onChangeStatusHandler} />
-
-//       <Button
-//         onClick={onClickRemoveHandler}
-//         variant="text"
-//         startIcon={<DeleteIcon />}
-//       />
-//     </li>
-//   );
-// }

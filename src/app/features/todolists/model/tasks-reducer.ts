@@ -1,4 +1,4 @@
-import type { TasksState } from '../app/App';
+import type { TasksState } from '../../../App';
 import { createTodolistAC, deleteTodolistAC } from './todolists-reducer';
 import { createAction, createReducer, nanoid } from '@reduxjs/toolkit';
 
@@ -27,14 +27,6 @@ export const changeTaskTitleAC = createAction<{
   taskId: string;
   title: string;
 }>('todolists/changeTaskTitleAC');
-
-export const changeTaskTitleAC1 = (payload: {
-  todolistId: string;
-  taskId: string;
-  title: string;
-}) => {
-  return { type: 'change_task_title', payload } as const;
-};
 
 export const tasksReducer = createReducer(initialState, (builder) => {
   builder
